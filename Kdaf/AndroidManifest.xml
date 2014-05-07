@@ -46,6 +46,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name="com.proyecto.kdaf.DetailLaunch"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="com.proyecto.kdaf.Launch"
             android:label="@string/app_name" >
         </activity>

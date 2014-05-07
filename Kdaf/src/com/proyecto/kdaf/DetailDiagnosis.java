@@ -40,7 +40,7 @@ public class DetailDiagnosis extends Activity {
 		TextView started = (TextView) findViewById(R.id.startedDet);
 		TextView finished = (TextView) findViewById(R.id.finishedDet);
 		
-		service.setText(diagnoses.getService_code());
+		service.setText(diagnoses.getService_description());
 		scenario.setText(diagnoses.getScenario_description());
 		started.setText(diagnoses.getStarted_at());
 		finished.setText(diagnoses.getFinished_at());
@@ -68,7 +68,17 @@ public class DetailDiagnosis extends Activity {
 		
 		hyp4.setText(diagnoses.getHypotheses().get(3).getType());
 		prob4.setText(diagnoses.getHypotheses().get(3).getPercentage());
+		
+		if (diagnoses.getService_code().equals("sm2m")){
+			TextView hyp5 = (TextView) findViewById(R.id.hyp5);
+			TextView prob5 = (TextView) findViewById(R.id.prob5);
+			hyp5.setText(diagnoses.getHypotheses().get(4).getType());
+			prob5.setText(diagnoses.getHypotheses().get(4).getPercentage());
+			
+		}
 
 		
 	}
+
+	
 }

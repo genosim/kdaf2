@@ -26,5 +26,6 @@
     <string name="cancelar">CANCELAR</string>
     <string name="display">Displaying %1$s of %2$s</string>
     <string name="ticket">Ticket</string>
+    <string name="vacio"/>
 
 </resources>

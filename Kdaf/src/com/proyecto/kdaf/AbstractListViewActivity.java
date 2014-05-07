@@ -19,6 +19,7 @@ package com.proyecto.kdaf;
 
 import java.util.List;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -86,7 +87,14 @@ public abstract class AbstractListViewActivity extends ListActivity
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
-		Toast.makeText(this, getListAdapter().getItem(position).toString(), Toast.LENGTH_SHORT).show();
+
+//		Toast.makeText(this, "posicion "+position+" seleccionada", Toast.LENGTH_SHORT).show();
+		
+		Intent intent = new Intent(getApplicationContext(), DetailDiagnosis.class);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra("posicion", position);
+		
+		startActivity(intent);
 	}
 	
 	protected boolean load(int firstVisibleItem, int visibleItemCount, int totalItemCount)

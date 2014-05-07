@@ -1,8 +1,10 @@
 package com.proyecto.kdaf;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,8 @@ public class Launch extends Activity {
 	private List<String> servicesCode = new ArrayList<String>();
 	private List<String> scenariosCode = new ArrayList<String>();
 	public static final String ARCHIVO_PREFS = "myPrefs";
-	
+	private LaunchAsync launchAsync;
+	private String username, password;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,8 @@ public class Launch extends Activity {
 		// creamos un editor para poder acceder a las shared preferences
         SharedPreferences settings = getSharedPreferences(ARCHIVO_PREFS, Context.MODE_PRIVATE);
         // comprobamos si existen los valores.
-        final String username = settings.getString("username", null);
-        final String password = settings.getString("password", null);
+        username = settings.getString("username", null);
+        password = settings.getString("password", null);
         
 		final Spinner spinService = (Spinner) findViewById(R.id.spinnerService);
 		final Spinner spinScenario = (Spinner)findViewById(R.id.spinnerScenario);
@@ -175,6 +178,9 @@ public class Launch extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				lanzarTarea();
+				
+				
 				
 				
 			}
@@ -182,5 +188,64 @@ public class Launch extends Activity {
 		
 		
 		
+	}
+	
+	public void lanzarTarea(){
+		
+		JSONObject json = new JSONObject();
+		JSONObject parameters = new JSONObject();
+		JSONObject observations = new JSONObject();
+		try {
+			
+			parameters.put("phone", "9124523");
+			observations.put("manifestation", "SLOW");
+			json.put("observations", observations);
+			json.put("parameters", parameters);
+			json.put("service", "sm2m");
+			json.put("scenario", "WebLogin");
+			
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Log.e("json", json.toString());
+		
+		StringEntity entity = null;
+		try {
+			entity = new StringEntity(json.toString());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
+//		comprobarEstado("24");
+        
+        AsyncHttpClient client = new AsyncHttpClient();
+		client.setBasicAuth(username, password);
+        client.post(this, "http://81.45.23.75:8000/diagnoses/", entity, "application/json",new JsonHttpResponseHandler() {
+                
+
+			public void onSuccess(JSONObject response) {
+				String id = "";
+				try {
+					id = response.getString("id");
+					Log.e("id", id);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				comprobarEstado(id);
+				
+			
+			}
+	
+		});
+		
+	}
+	
+	public void comprobarEstado(String id){
+		launchAsync = new LaunchAsync(this, id, username, password);
+		launchAsync.execute();
 	}
 }

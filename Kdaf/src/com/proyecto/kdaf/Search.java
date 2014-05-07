@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,12 +31,20 @@ public class Search extends AbstractListViewActivity {
 	private Date fecha_ini, fecha_fin;
 	private String next = "http://81.45.23.75:8000/diagnoses/expanded/";
 	private String username, password;
+	private ProgressDialog pDialog;;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		
+		pDialog = new ProgressDialog(this);
+		pDialog.setMessage("Loading...");
+		pDialog.setIndeterminate(false);
+		pDialog.setCancelable(true);
+		pDialog.show();
+		
+		listado.clear();
 		// creamos un editor para poder acceder a las shared preferences
         SharedPreferences settings = getSharedPreferences(ARCHIVO_PREFS, Context.MODE_PRIVATE);
         // comprobamos si existen los valores.
@@ -184,6 +194,8 @@ public class Search extends AbstractListViewActivity {
 	public void cargarListview(){
 		Log.e("listado ", String.valueOf(listado.size()));
 		
+		pDialog.dismiss();
+		
 		footerView = ((LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer, null, false);
 		getListView().addFooterView(footerView, null, false);
 		setListAdapter(new MyArrayDiagnoses(getApplicationContext(), getData(0, PAGESIZE)));
@@ -242,4 +254,6 @@ public class Search extends AbstractListViewActivity {
 		newList.addAll(listado.subList(offset, end));
 		return newList;		
 	}
+	
+	
 }
